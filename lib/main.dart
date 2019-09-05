@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:my_app/stores/postsGallery.dart';
 import 'package:toast/toast.dart';
 import 'dart:ui';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -6,10 +7,14 @@ import 'package:provider/provider.dart';
 import 'stores/userStore.dart';
 import 'package:http/http.dart' as http;
 import 'stores/constValue.dart';
+import 'routers.dart';
 
+double rpx=0;
 void main() async {
   final prefs = await SharedPreferences.getInstance();
-  prefs.setString('urlPath', '118.25.177.76');
+  prefs.setString('urlPath', '10.0.2.2');
+  prefs.setString('scheme', 'http');
+  prefs.setInt('ports', 5000);
   // var rpx=MediaQuery.of(context).size.width/750;
   runApp(MultiProvider(
     providers: [
@@ -17,7 +22,9 @@ void main() async {
         builder: (context) => UserProvider(),
       ),
       ChangeNotifierProvider<ConstValueProvider>(
-          builder: (context) => ConstValueProvider())
+          builder: (context) => ConstValueProvider()),
+          
+          ChangeNotifierProvider<PostsGalleryProvider>(builder: (context) =>PostsGalleryProvider())
     ],
     child: MaterialApp(
       home: MyApp(),
@@ -32,7 +39,7 @@ Future getLoginResponse() async {
   Uri url = Uri(
       scheme: "http",
       host: host,
-      port: 80,
+      port: 5000,
       // queryParameters: {"userAccount": user.userAccount, "pwd": user.pwd},
       // path: "/user/userLogin"
       path: "posts/getToken");
@@ -194,7 +201,7 @@ class LoginBtnBar extends StatelessWidget {
             flex: 3,
             child: FlatButton(
               onPressed: () {
-                getLoginResponse();
+                Navigator.push(context, Routers(rpx: rpx).generateRoute(RouteSettings(name: '/posts')));
               },
               child: Text(
                 '登录',
@@ -317,9 +324,7 @@ class MyApp extends StatelessWidget {
     Future.delayed(Duration(milliseconds: 200)).then((e) {
       Provider.of<ConstValueProvider>(context).setRpx(context);
     });
-  
-    
-    var rpx = Provider.of<ConstValueProvider>(context).rpx;
+    rpx = Provider.of<ConstValueProvider>(context).rpx;
     return Container(
         child: Scaffold(
       // appBar: AppBar(title: Text('登录'),),
