@@ -7,8 +7,12 @@ import 'package:http/http.dart' as http;
 import 'package:provider/provider.dart';
 
 class PostsGalleryProvider with ChangeNotifier {
-  List<PostsModel> _model = List<PostsModel>();
-  get models => _model;
+  List<PostsModel> _model1 = List<PostsModel>();
+  List<PostsModel> _model2 = List<PostsModel>();
+  double _len1=0;
+  double _len2=0;
+  get models1 => _model1;
+  get models2 => _model2;
 
 
 //   Future getPosts(orderType, ifRefresh) async {
@@ -38,6 +42,16 @@ class PostsGalleryProvider with ChangeNotifier {
 
     for(var item in posts){
       result.add(PostsModel.fromJson(item));
+    }
+    for(var item in result){
+      if(_len1>=_len2){
+        _model1.add(item);
+        _len1+=item.picsRate;
+      }
+      else{
+        _model2.add(item);
+        _len2+=item.picsRate;
+      }
     }
     notifyListeners();
   }

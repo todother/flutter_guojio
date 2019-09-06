@@ -12,7 +12,7 @@ import 'routers.dart';
 double rpx=0;
 void main() async {
   final prefs = await SharedPreferences.getInstance();
-  prefs.setString('urlPath', '10.0.2.2');
+  prefs.setString('urlPath', 'localhost');
   prefs.setString('scheme', 'http');
   prefs.setInt('ports', 5000);
   // var rpx=MediaQuery.of(context).size.width/750;
