@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
@@ -9,11 +10,38 @@ import 'package:provider/provider.dart';
 class PostsGalleryProvider with ChangeNotifier {
   List<PostsModel> _model1 = List<PostsModel>();
   List<PostsModel> _model2 = List<PostsModel>();
-  double _len1=0;
-  double _len2=0;
+  double _len1 = 0;
+  double _len2 = 0;
   get models1 => _model1;
   get models2 => _model2;
+  List<PostsModel> posts =List<PostsModel>();
+  PostsGalleryProvider(){
+    getPosts(0,0);
+  }
+  Future getPosts(orderType, ifRefresh) async {
+    Uri url = await Ajax().generate('posts/getPosts', {
+      "openId": "ol_BV4zcyVJaOBtOTD5AfpkFERww",
+      "dataFrom": "0",
+      "count": "30",
+      "refreshTime": "2019/09/05 00:00:00",
+      "currentSel": "1",
+      "ulo": "0",
+      "ula": "0"
+    });
+    // final
+    final response = await http.get(url);
+    var results = List<PostsModel>();
 
+    var post = json.decode(response.body)["result"];
+    // result.add(posts);
+
+    for (var item in post) {
+      results.add(PostsModel.fromJson(item));
+    }
+    posts=results;
+
+    notifyListeners();
+  }
 
 //   Future getPosts(orderType, ifRefresh) async {
 //   Uri url = await Ajax().generate('posts/getPosts', {
@@ -33,24 +61,22 @@ class PostsGalleryProvider with ChangeNotifier {
 //   }
 // }
 
-
   setGalleryModel(String items) {
-    var result=List<PostsModel>();
+    var result = List<PostsModel>();
 
     var posts = json.decode(items)["result"];
     // result.add(posts);
 
-    for(var item in posts){
+    for (var item in posts) {
       result.add(PostsModel.fromJson(item));
     }
-    for(var item in result){
-      if(_len1>=_len2){
+    for (var item in result) {
+      if (_len1 >= _len2) {
         _model1.add(item);
-        _len1+=item.picsRate;
-      }
-      else{
+        _len1 += item.picsRate;
+      } else {
         _model2.add(item);
-        _len2+=item.picsRate;
+        _len2 += item.picsRate;
       }
     }
     notifyListeners();

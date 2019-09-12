@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:my_app/main.dart';
-import 'pages/postsGallery.dart';
+import 'pages/recommendPage.dart';
 
 class Routers extends Object {
   Routers({Key key,this.rpx});
@@ -11,7 +11,7 @@ class Routers extends Object {
         return MaterialPageRoute(builder: (_)=>MyApp());
         break;
       case "/posts":
-        return MaterialPageRoute(builder: (_)=>PostsGallery(now: DateTime.now(),openId: '',orderType: 1,rpx: rpx,));
+        return MaterialPageRoute(builder: (_)=>ReCommendPage());
         break;
       default:
         return MaterialPageRoute(builder: (_)=>Text('this is not router like this'));

@@ -52,6 +52,9 @@ flutter:
    - images/cat_logo.png
    - images/wechat-logo.png
    - images/weibo_logo.png
+   - images/woman.jpg
+   - images/namecard.jpg
+   - images/nafeng.jpg
   #  - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see
