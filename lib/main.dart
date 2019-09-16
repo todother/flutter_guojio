@@ -1,7 +1,31 @@
+import 'dart:async';
+import 'dart:io' show Platform;
+
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'pages/recommendPage.dart';
 
-void main() {
+Future main() async {
+  final prefs = await SharedPreferences.getInstance();
+  prefs.clear();
+  // String hosts = prefs.get('urlPath');
+  // String scheme = prefs.get('scheme');
+  // int ports = prefs.get('ports');
+  prefs.setBool("ifIOS", Platform.isIOS);
+  prefs.setBool("ifPrd", false);
+
+  prefs.setString("urlPath_ios_d", "127.0.0.1");
+  prefs.setString("scheme_ios_d", "http");
+  prefs.setInt("ports_ios_d", 5000);
+
+  prefs.setString("urlPath_and_d", "10.0.2.2");
+  prefs.setString("scheme_and_d", "http");
+  prefs.setInt("ports_and_d", 5000);
+
+  prefs.setString("urlPath_p", "118.26.177.76");
+  prefs.setString("scheme_p", "http");
+  prefs.setInt("ports_p", 80);
+
   runApp(MyApp());
 }
 
@@ -60,7 +84,10 @@ class _RecommendPageState extends State<RecommendPage>
       appBar: AppBar(
         centerTitle: true,
         actions: <Widget>[
-          IconButton(icon:Icon(Icons.search),onPressed: (){},),
+          IconButton(
+            icon: Icon(Icons.search),
+            onPressed: () {},
+          ),
         ],
         leading: IconButton(icon: Icon(Icons.view_headline), onPressed: () {}),
         title: Container(
@@ -96,8 +123,7 @@ class _RecommendPageState extends State<RecommendPage>
           Container(
             child: Text('this is 0'),
           ),
-          Container(child:ReCommendPage()
-          ),
+          Container(child: ReCommendPage()),
           Container(
             child: Text('this is 2'),
           ),

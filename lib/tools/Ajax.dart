@@ -1,21 +1,40 @@
+import 'dart:async';
 
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:flutter/material.dart';
 
 class Ajax extends Object {
-  // 
-  Future<Uri> generate(String path, Map<String,dynamic> params) async{
+  //
+  bool ifPrd;
+  bool ifIos;
+
+  Future<Uri> generate(String path, Map<String, dynamic> params) async {
     final prefs = await SharedPreferences.getInstance();
-    String hosts=prefs.get('urlPath');
-    String scheme=prefs.get('scheme');
-    int ports=prefs.get('ports');
+
+    String hosts;
+    String scheme;
+    int ports;
+
+    if (prefs.getBool("ifPrd")) {
+      hosts = prefs.getString('urlPath_p');
+      scheme = prefs.getString('scheme_p');
+      ports = prefs.getInt('ports_p');
+    } else {
+      if (prefs.getBool("ifIOS")) {
+        hosts = prefs.getString('urlPath_ios_d');
+        scheme = prefs.getString('scheme_ios_d');
+        ports = prefs.getInt('ports_ios_d');
+      } else {
+        hosts = prefs.getString('urlPath_and_d');
+        scheme = prefs.getString('scheme_and_d');
+        ports = prefs.getInt('ports_and_d');
+      }
+    }
     Uri url = Uri(
-      scheme: scheme,
-      host: hosts,
-      port: ports,
-      path: path,
-      queryParameters: params);
+        scheme: scheme,
+        host: hosts,
+        port: ports,
+        path: path,
+        queryParameters: params);
     return url;
   }
-  
 }

@@ -2,17 +2,24 @@ import 'dart:io';
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:my_app/models/PostsModel.dart';
 import 'package:my_app/models/headInfo.dart';
 import 'package:flutter_swiper/flutter_swiper.dart';
+import 'package:my_app/stores/postsGallery.dart';
+import 'package:provider/provider.dart';
 
 class ReCommendPage extends StatelessWidget {
   const ReCommendPage({Key key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      child: HeadBar(),
-    );
+    return MultiProvider(
+        providers: [
+          ChangeNotifierProvider(builder: (context) => PostsGalleryProvider()),
+        ],
+        child: SingleChildScrollView(
+          child: HeadBar(),
+        ));
   }
 }
 
@@ -25,10 +32,12 @@ class HeadBar extends StatefulWidget {
 class _HeadBarState extends State<HeadBar> {
   double rpx = 0.0;
   List<HeadInfo> heads = List<HeadInfo>();
+  ScrollController scrollController;
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
+    scrollController=ScrollController();
     HeadInfo head = HeadInfo();
     head.avatarUrl =
         "https://pic2.zhimg.com/v2-a88cd7618933272ca681f86398e6240d_xl.jpg";
@@ -42,6 +51,7 @@ class _HeadBarState extends State<HeadBar> {
   @override
   Widget build(BuildContext context) {
     // return Container();
+
     rpx = MediaQuery.of(context).size.width / 750;
     List<String> imgList = [
       "images/nafeng.jpg",
@@ -49,19 +59,25 @@ class _HeadBarState extends State<HeadBar> {
       "images/namecard.jpg"
     ];
     return Column(children: [
-      Swiper(
-        containerWidth: 750 * rpx,
-        containerHeight: 350 * rpx,
-        itemBuilder: (context, index) {
-          return Image.network(
-            imgList[index],
-            fit: BoxFit.fitWidth,
-          );
-        },
-        itemCount: 3,
-        viewportFraction: 0.8,
-        scale: 0.9,
+      SizedBox(
+        height: 20 * rpx,
       ),
+      SizedBox(
+          width: 750 * rpx,
+          height: 350 * rpx,
+          child: Swiper(
+            containerWidth: 750 * rpx,
+            containerHeight: 350 * rpx,
+            itemBuilder: (context, index) {
+              return Image.asset(
+                imgList[index],
+                fit: BoxFit.fitWidth,
+              );
+            },
+            itemCount: 3,
+            viewportFraction: 0.8,
+            scale: 0.9,
+          )),
       Container(
           height: 140 * rpx,
           child: ListView.builder(
@@ -70,8 +86,61 @@ class _HeadBarState extends State<HeadBar> {
             itemBuilder: (context, index) {
               return drawHeadInfo(heads[index], rpx);
             },
-          ))
+          )),
+      Row(
+        children: <Widget>[
+          Expanded(
+            flex: 1,
+            child: Column(
+              children: [genPiclist(0, context,scrollController)],
+            ),
+          ),
+          Expanded(
+            flex: 1,
+            child: Column(
+              children: [genPiclist(1, context,scrollController)],
+            ),
+          )
+        ],
+      )
     ]);
+  }
+}
+
+genPiclist(int idx, BuildContext context,ScrollController scrollController) {
+  var provider = Provider.of<PostsGalleryProvider>(context);
+  var host = "http://www.guojio.com";
+  List<PostsModel> postsList;
+  double rpx = MediaQuery.of(context).size.width / 750;
+
+  if (idx == 0) {
+    postsList = provider.model1;
+  } else {
+    postsList = provider.model2;
+  }
+  if (postsList.length > 0) {
+    return ListView.builder(
+      itemCount: postsList.length,
+      controller: scrollController,
+      itemBuilder: (BuildContext context, int index) {
+        return Column(
+          children: [
+            Image.network(
+              "${host + postsList[index].postsPics}",
+              fit: BoxFit.fitWidth,
+              width: 360 * rpx,
+              height: 360 * postsList[index].picsRate * rpx,
+            )
+          ],
+        );
+      },
+      shrinkWrap: true,
+    );
+  } else {
+    // List<Container> result=List<Container>();
+    // result.add(Container());
+    // return result;
+    return Container();
   }
 }
 
@@ -126,23 +195,17 @@ Widget drawHeadInfo(HeadInfo head, double rpx) {
   );
 }
 
-Widget drawSwiperList(double rpx) {
-  List<String> imgList = [
-    "images/nafeng.jpg",
-    "images/woman.jpg",
-    "images/namecard.jpg"
-  ];
-  return Swiper(
-    containerWidth: 750 * rpx,
-    containerHeight: 350 * rpx,
+Widget drawSepList(List<PostsModel> list, double rpx) {
+  return ListView.builder(
     itemBuilder: (context, index) {
-      return Image.network(
-        imgList[index],
-        fit: BoxFit.fitWidth,
-      );
+      return Container(
+          padding: EdgeInsets.all(5 * rpx),
+          child: ListTile(
+            title: Image.network(
+              list[index].postsPics,
+              fit: BoxFit.fitWidth,
+            ),
+          ));
     },
-    itemCount: 3,
-    viewportFraction: 0.8,
-    scale: 0.9,
   );
 }
