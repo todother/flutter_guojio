@@ -37,7 +37,7 @@ class _HeadBarState extends State<HeadBar> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    scrollController=ScrollController();
+    scrollController = ScrollController();
     HeadInfo head = HeadInfo();
     head.avatarUrl =
         "https://pic2.zhimg.com/v2-a88cd7618933272ca681f86398e6240d_xl.jpg";
@@ -88,17 +88,20 @@ class _HeadBarState extends State<HeadBar> {
             },
           )),
       Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           Expanded(
             flex: 1,
             child: Column(
-              children: [genPiclist(0, context,scrollController)],
+              children: [genPiclist(0, context, scrollController)],
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.start,
             ),
           ),
           Expanded(
             flex: 1,
             child: Column(
-              children: [genPiclist(1, context,scrollController)],
+              children: [genPiclist(1, context, scrollController)],
             ),
           )
         ],
@@ -107,7 +110,7 @@ class _HeadBarState extends State<HeadBar> {
   }
 }
 
-genPiclist(int idx, BuildContext context,ScrollController scrollController) {
+genPiclist(int idx, BuildContext context, ScrollController scrollController) {
   var provider = Provider.of<PostsGalleryProvider>(context);
   var host = "http://www.guojio.com";
   List<PostsModel> postsList;
@@ -130,6 +133,55 @@ genPiclist(int idx, BuildContext context,ScrollController scrollController) {
               fit: BoxFit.fitWidth,
               width: 360 * rpx,
               height: 360 * postsList[index].picsRate * rpx,
+            ),
+            ListTile(
+              title: Text(
+                "${postsList[index].postsContent}",
+                style: TextStyle(fontSize: 25*rpx,fontWeight: FontWeight.bold),
+                overflow: TextOverflow.ellipsis,
+                maxLines: 2,
+              ),
+              subtitle: Row(
+                children: [
+                  Flexible(
+                    flex:3,
+                    fit: FlexFit.tight,
+                    child: Row(
+                      children: <Widget>[
+                        SizedBox(
+                          width: 40*rpx,
+                          height: 40*rpx,
+                          child: CircleAvatar(
+                            backgroundImage:
+                                NetworkImage(postsList[index].makerPhoto),
+                          ),
+                        ),
+                        Expanded(
+                          child: Padding(
+                            padding: EdgeInsets.only(left: 10*rpx),
+                            child: Text(
+                              postsList[index].postsMaker,
+                              style: TextStyle(fontSize: 22*rpx),
+                              overflow: TextOverflow.ellipsis,
+                              
+                            )
+                          )
+                        )
+                      ],
+                    ),
+                  ),
+                  Flexible(
+                    flex: 2,
+                    child: Row(
+                      mainAxisAlignment:  MainAxisAlignment.end,
+                      children: <Widget>[
+                        IconButton(icon: Icon(Icons.favorite),onPressed: (){},color: Colors.redAccent,splashColor: Colors.transparent,),
+                        Text(postsList[index].postsLoved.toString())
+                      ],
+                    ),
+                  )
+                ],
+              ),
             )
           ],
         );

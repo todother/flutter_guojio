@@ -7,6 +7,7 @@ import 'package:my_app/tools/Ajax.dart';
 import 'package:http/http.dart' as http;
 // import 'package:provider/provider.dart';
 
+
 class PostsGalleryProvider with ChangeNotifier {
   List<PostsModel> model1 = List<PostsModel>();
   List<PostsModel> model2 = List<PostsModel>();
