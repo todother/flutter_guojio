@@ -29,6 +29,12 @@ class Ajax extends Object {
         ports = prefs.getInt('ports_and_d');
       }
     }
+
+    if(prefs.getBool("ifReal_d")){
+      hosts = prefs.getString('urlPath_real_d');
+        scheme = prefs.getString('scheme_real_d');
+        ports = prefs.getInt('ports_real_d');
+    }
     Uri url = Uri(
         scheme: scheme,
         host: hosts,

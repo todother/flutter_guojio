@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:io';
 import 'dart:math';
 
@@ -5,6 +6,9 @@ import 'package:flutter/material.dart';
 import 'package:my_app/models/PostsModel.dart';
 import 'package:my_app/models/headInfo.dart';
 import 'package:flutter_swiper/flutter_swiper.dart';
+import 'package:my_app/pages/detailPage.dart';
+import 'package:my_app/stores/PostsDetailProvider.dart';
+import 'package:my_app/stores/constValue.dart';
 import 'package:my_app/stores/postsGallery.dart';
 import 'package:provider/provider.dart';
 
@@ -128,54 +132,80 @@ genPiclist(int idx, BuildContext context, ScrollController scrollController) {
       itemBuilder: (BuildContext context, int index) {
         return Column(
           children: [
-            Image.network(
-              "${host + postsList[index].postsPics}",
-              fit: BoxFit.fitWidth,
-              width: 360 * rpx,
-              height: 360 * postsList[index].picsRate * rpx,
-            ),
+            FlatButton(
+                splashColor: Colors.transparent,
+                onPressed: () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => MultiProvider(
+                                  providers: [
+                                    ChangeNotifierProvider(
+                                      builder: (context) => PostsDetailProvider(
+                                        "ol_BV4zcyVJaOBtOTD5AfpkFERww",
+                                        postsList[index].makerID,
+                                        postsList[index].postsID,
+                                      ),
+                                    ),
+                                    ChangeNotifierProvider(builder: (context)=>ConstValueProvider(),)
+                                  ],
+                                  child: DetailPage(
+                                    openId: "ol_BV4zcyVJaOBtOTD5AfpkFERww",
+                                    makerId: postsList[index].makerID,
+                                    postsId: postsList[index].postsID,
+                                  ))));
+                },
+                child: Image.network(
+                  "${host + postsList[index].postsPics}",
+                  fit: BoxFit.fitWidth,
+                  width: 360 * rpx,
+                  height: 360 * postsList[index].picsRate * rpx,
+                )),
             ListTile(
               title: Text(
                 "${postsList[index].postsContent}",
-                style: TextStyle(fontSize: 25*rpx,fontWeight: FontWeight.bold),
+                style:
+                    TextStyle(fontSize: 25 * rpx, fontWeight: FontWeight.bold),
                 overflow: TextOverflow.ellipsis,
                 maxLines: 2,
               ),
               subtitle: Row(
                 children: [
                   Flexible(
-                    flex:3,
+                    flex: 3,
                     fit: FlexFit.tight,
                     child: Row(
                       children: <Widget>[
                         SizedBox(
-                          width: 40*rpx,
-                          height: 40*rpx,
+                          width: 40 * rpx,
+                          height: 40 * rpx,
                           child: CircleAvatar(
                             backgroundImage:
                                 NetworkImage(postsList[index].makerPhoto),
                           ),
                         ),
                         Expanded(
-                          child: Padding(
-                            padding: EdgeInsets.only(left: 10*rpx),
-                            child: Text(
-                              postsList[index].postsMaker,
-                              style: TextStyle(fontSize: 22*rpx),
-                              overflow: TextOverflow.ellipsis,
-                              
-                            )
-                          )
-                        )
+                            child: Padding(
+                                padding: EdgeInsets.only(left: 10 * rpx),
+                                child: Text(
+                                  postsList[index].postsMaker,
+                                  style: TextStyle(fontSize: 22 * rpx),
+                                  overflow: TextOverflow.ellipsis,
+                                )))
                       ],
                     ),
                   ),
                   Flexible(
                     flex: 2,
                     child: Row(
-                      mainAxisAlignment:  MainAxisAlignment.end,
+                      mainAxisAlignment: MainAxisAlignment.end,
                       children: <Widget>[
-                        IconButton(icon: Icon(Icons.favorite),onPressed: (){},color: Colors.redAccent,splashColor: Colors.transparent,),
+                        IconButton(
+                          icon: Icon(Icons.favorite),
+                          onPressed: () {},
+                          color: Colors.redAccent,
+                          splashColor: Colors.transparent,
+                        ),
                         Text(postsList[index].postsLoved.toString())
                       ],
                     ),

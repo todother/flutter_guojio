@@ -26,6 +26,7 @@ dependencies:
   flutter_swiper : 
   flutter_screenutil: 
   json_annotation:
+  flutter_page_indicator:
   
 
 dev_dependencies:

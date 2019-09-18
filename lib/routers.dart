@@ -13,7 +13,7 @@ class Routers extends Object {
       case "/posts":
         return MaterialPageRoute(builder: (_)=>ReCommendPage());
         break;
-      default:
+      case "/detail":
         return MaterialPageRoute(builder: (_)=>Text('this is not router like this'));
         break;
     }

@@ -1,7 +1,9 @@
-import 'dart:async';
+
 import 'dart:io' show Platform;
 
 import 'package:flutter/material.dart';
+import 'package:my_app/stores/constValue.dart';
+import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'pages/recommendPage.dart';
 
@@ -13,6 +15,11 @@ Future main() async {
   // int ports = prefs.get('ports');
   prefs.setBool("ifIOS", Platform.isIOS);
   prefs.setBool("ifPrd", false);
+  prefs.setBool("ifReal_d", true);
+
+  prefs.setString("urlPath_real_d", "192.168.0.8");
+  prefs.setString("scheme_real_d", "http");
+  prefs.setInt("ports_real_d", 5000);
 
   prefs.setString("urlPath_ios_d", "127.0.0.1");
   prefs.setString("scheme_ios_d", "http");
@@ -26,6 +33,8 @@ Future main() async {
   prefs.setString("scheme_p", "http");
   prefs.setInt("ports_p", 80);
 
+  prefs.setString("picServer", "http://www.guojio.com");
+
   runApp(MyApp());
 }
 
@@ -36,7 +45,12 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: '果Jio',
-      home: RecommendPage(),
+      home: MultiProvider(
+        providers: [
+          ChangeNotifierProvider(builder: (context)=>ConstValueProvider(),)
+        ],
+        child: RecommendPage(),
+      ),
     );
   }
 }
@@ -64,6 +78,8 @@ class _RecommendPageState extends State<RecommendPage>
   void initState() {
     super.initState();
     _tabController = TabController(length: 3, vsync: this, initialIndex: index);
+    ConstValueProvider provider=ConstValueProvider();
+    provider.setRpx(context);
 
     _tabController.addListener(_handleChange);
   }
@@ -91,7 +107,7 @@ class _RecommendPageState extends State<RecommendPage>
         ],
         leading: IconButton(icon: Icon(Icons.view_headline), onPressed: () {}),
         title: Container(
-            width: 400 * rpx,
+            width: 450 * rpx,
             child: TabBar(
               labelStyle: TextStyle(fontSize: bigText),
               unselectedLabelStyle: TextStyle(fontSize: smlText),
