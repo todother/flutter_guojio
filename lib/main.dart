@@ -145,6 +145,16 @@ class _RecommendPageState extends State<RecommendPage>
           ),
         ],
       ),
+      bottomNavigationBar: BottomNavigationBar(
+        onTap: (i){
+          print(i);
+        },
+        items: [
+        
+        BottomNavigationBarItem(icon: Icon(Icons.home),title: Text("home")),
+        BottomNavigationBarItem(icon: Icon(Icons.camera_enhance),title: Text("camera")),
+        BottomNavigationBarItem(icon: Icon(Icons.verified_user),title: Text("user")),
+      ],),
     );
   }
 }

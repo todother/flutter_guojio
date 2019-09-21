@@ -11,12 +11,22 @@ class PostsDetailProvider with ChangeNotifier{
   String _postsId;
   String _openId;
   String _userId;
+  bool autoFocus=false;
+
+  FocusNode focusNode=FocusNode();
+  ScrollController controller=ScrollController();
   PostsDetailProvider(String openId,String userId,String postsId )  {
     _postsId=postsId;
     _openId=openId;
     userId=userId;
     getRenderData(openId,userId,postsId);
   }
+
+  setFocus(){
+    autoFocus=!autoFocus;
+    notifyListeners();
+  }
+
   getRenderData(String openId,String userId, String postsId) async {
     Uri url=await Ajax().generate("posts/getPostsDetail", {
       "openId":openId,
